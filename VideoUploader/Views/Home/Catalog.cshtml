@@ -1,51 +1,33 @@
-﻿@model VideoCatalogViewModel
+﻿@{
+    ViewBag.Title = "Video Catalog";
+}
 
 <h2>Video Catalog</h2>
 
-@if (!Model.Videos.Any())
-{
-    <p>The catalog is empty now. <a href="/Home/Upload">Upload</a> some videos now.</p>
-}
-else {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>File Name</th>
-                <th>File Size (KB)</th>
-                <th>Play</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var video in Model.Videos)
-            {
-                <tr>
-                    <td>@video.FileName</td>
-                    <td>@(video.FileSize / 1024)</td>
-                    <td>
-                        <button class="btn btn-primary play-btn" data-filename="@video.FileName">Play</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-<video id="videoPlayer" controls hidden>
-    <source id="videoSource" src="" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+<!-- Display message if catalog is empty -->
+<p data-bind="visible: videos().length === 0">The catalog is empty now. <a href="/Home/Upload">Upload</a> some videos now.</p>
 
-@section scripts
-{
-    <script>
-        $(".play-btn").click(function () {
-            var fileName = $(this).data("filename");
+<!-- Video table displayed when there are videos -->
+<table class="table" data-bind="visible: videos().length > 0">
+    <thead>
+        <tr>
+            <th>File Name</th>
+            <th>File Size (Bytes)</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: videos">
+        <tr>
+            <td data-bind="text: fileName"></td>
+            <td data-bind="text: fileSize"></td>
+            <td>
+                <button class="btn btn-primary" data-bind="click: $parent.playVideo">Play</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-            $("#videoSource").attr("src", "/media/" + fileName);
+<video id="videoPlayer" controls hidden></video>
 
-            $("#videoPlayer").attr("hidden", false);
-
-            $("#videoPlayer")[0].load();
-            $("#videoPlayer")[0].play();
-        });
-    </script>
-}
+<script src="~/lib/knockout/knockout-3.5.1.js"></script>
+<script src="/js/site.js"></script>

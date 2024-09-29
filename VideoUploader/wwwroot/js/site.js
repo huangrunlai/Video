@@ -1,4 +1,34 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function VideoViewModel() {
+    var self = this;
+    self.videos = ko.observableArray([]);
 
-// Write your JavaScript code.
+    // Play selected video
+    self.playVideo = function (video) {
+        var videoPlayer = document.getElementById('videoPlayer');
+        videoPlayer.src = '/media/' + video.fileName;
+        videoPlayer.load();
+        videoPlayer.play();
+        videoPlayer.hidden = false;
+    };
+
+    // Load videos from server
+    self.loadVideos = function () {
+        $.ajax({
+            url: '/api/video',
+            type: 'GET',
+            success: function (data) {
+                if (data && data.length > 0) {
+                    self.videos(data);  // Populate videos if available
+                } else {
+                    self.videos([]); // Empty array to indicate no videos
+                }
+            },
+            error: function () {
+                console.error('Failed to load videos');
+            }
+        });
+    };
+
+    self.loadVideos(); // Initial load when the page is loaded
+}
+ko.applyBindings(new VideoViewModel());

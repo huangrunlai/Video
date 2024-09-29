@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using VideoUploader.Models;
+using System.IO;
+using System.Linq;
 
 namespace VideoUploader.Controllers
 {
@@ -22,13 +24,10 @@ namespace VideoUploader.Controllers
                 Directory.CreateDirectory(_mediaFolderPath);
             }
         }
+
         public IActionResult Catalog()
         {
-            var model = new VideoCatalogViewModel
-            {
-                Videos = GetVideoFiles()
-            };
-            return View(model);
+            return View();
         }
 
         public IActionResult Upload()
