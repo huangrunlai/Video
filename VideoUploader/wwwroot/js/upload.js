@@ -4,7 +4,7 @@
         var formData = new FormData(this);
 
         $.ajax({
-            url: '/api/upload',
+            url: '/api/video/upload',
             type: 'POST',
             data: formData,
             contentType: false,
