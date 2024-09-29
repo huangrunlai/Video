@@ -1,0 +1,36 @@
+﻿<h2>Upload MP4 Files</h2>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="files" id="fileInput" multiple accept=".mp4" />
+    <button type="button" id="uploadBtn" class="btn btn-primary">Upload</button>
+</form>
+
+<p id="uploadStatus"></p>
+
+
+@section scripts
+{
+    <script>
+        $("#uploadBtn").click(function () {
+            var formData = new FormData($('#uploadForm')[0]);
+            $.ajax({
+                url: '/api/upload',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $("#uploadStatus").text("Files successfully uploaded.");
+                    window.location.href = '/';
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    let errorMessage = "Error: " + jqXHR.status + " " + errorThrown;
+                    if (jqXHR.responseText) {
+                        errorMessage += ": " + jqXHR.responseText;
+                    }
+                    $("#uploadStatus").text(errorMessage);
+                }
+            });
+        });
+    </script>
+}
